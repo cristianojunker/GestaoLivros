@@ -2,47 +2,65 @@
 
 namespace App\Http\Controllers\Auth;
 
+use App\Actions\AuthAction;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Auth\LoginRequest;
 use App\Providers\RouteServiceProvider;
 use Illuminate\Http\RedirectResponse;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
+use Illuminate\Validation\ValidationException;
 use Illuminate\View\View;
+use Throwable;
 
 class AuthenticatedSessionController extends Controller
 {
-    /**
-     * Display the login view.
-     */
+    public function __construct(
+        private readonly AuthAction $authAction
+    ) {}
+
     public function create(): View
     {
         return view('auth.login');
     }
 
-    /**
-     * Handle an incoming authentication request.
-     */
     public function store(LoginRequest $request): RedirectResponse
     {
-        $request->authenticate();
+        try {
+            $data = $request->validated();
 
-        $request->session()->regenerate();
+            $this->authAction->login(
+                credentials: [
+                    'email' => $data['email'],
+                    'password' => $data['password'],
+                ],
+                remember: $data['remember'] ?? false
+            );
 
-        return redirect()->intended(RouteServiceProvider::HOME);
+            return redirect()->intended(RouteServiceProvider::HOME);
+        } catch (ValidationException $e) {
+            throw $e;
+        } catch (Throwable $e) {
+            report($e);
+
+            return back()
+                ->withInput($request->only('email', 'remember'))
+                ->withErrors([
+                    'error' => 'Ocorreu um erro ao realizar o login. Por favor, tente novamente.',
+                ]);
+        }
     }
 
-    /**
-     * Destroy an authenticated session.
-     */
-    public function destroy(Request $request): RedirectResponse
+    public function destroy(): RedirectResponse
     {
-        Auth::guard('web')->logout();
+        try {
+            $this->authAction->logout();
 
-        $request->session()->invalidate();
+            return redirect('/');
+        } catch (Throwable $e) {
+            report($e);
 
-        $request->session()->regenerateToken();
-
-        return redirect('/');
+            return back()->withErrors([
+                'error' => 'Ocorreu um erro ao realizar logout. Por favor, tente novamente.',
+            ]);
+        }
     }
 }
