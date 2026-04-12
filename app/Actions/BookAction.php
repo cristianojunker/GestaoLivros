@@ -11,11 +11,15 @@ class BookAction
     /**
      * Lista os livros com busca por título e paginação.
      */
-    public function list(string|null $search = null): LengthAwarePaginator
+    public function list(?string $search = null, bool $onlyAvailable = false): LengthAwarePaginator
     {
         return Book::query()
+            ->withActiveLoansCount()
             ->when($search, function ($query, $search) {
                 $query->where('title', 'like', '%' . trim($search) . '%');
+            })
+            ->when($onlyAvailable, function ($query) {
+                $query->available();
             })
             ->latest()
             ->paginate(10)
@@ -33,11 +37,13 @@ class BookAction
     }
 
     /**
-     * Busca um livro pelo id.
+     * Busca um livro pelo id e tambem o número de empréstimos ativos.
      */
     public function findById(int $bookId): Book
     {
-        return Book::query()->findOrFail($bookId);
+        return Book::query()
+            ->withActiveLoansCount()
+            ->findOrFail($bookId);
     }
 
     /**

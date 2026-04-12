@@ -81,23 +81,42 @@
                                         <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                             Ano
                                         </th>
+                                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                            Status
+                                        </th>
                                         <th class="px-4 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
                                             Ações
                                         </th>
                                     </tr>
                                 </thead>
+
                                 <tbody class="bg-white divide-y divide-gray-200">
                                     @foreach ($books as $book)
                                         <tr>
                                             <td class="px-4 py-4 font-medium text-gray-900">
                                                 {{ $book->title }}
                                             </td>
+
                                             <td class="px-4 py-4 text-gray-700">
                                                 {{ $book->author }}
                                             </td>
+
                                             <td class="px-4 py-4 text-gray-700">
                                                 {{ $book->published_year ?? '-' }}
                                             </td>
+
+                                            <td class="px-4 py-4">
+                                                @if ($book->active_loans_count === 0)
+                                                    <span class="inline-flex items-center rounded-md bg-green-100 px-2 py-1 text-xs font-medium text-green-700">
+                                                        Disponível
+                                                    </span>
+                                                @else
+                                                    <span class="inline-flex items-center rounded-md bg-red-100 px-2 py-1 text-xs font-medium text-red-700">
+                                                        Emprestado
+                                                    </span>
+                                                @endif
+                                            </td>
+
                                             <td class="px-4 py-4">
                                                 <div class="flex items-center justify-end gap-2">
                                                     <a href="{{ route('books.show', $book->id) }}"
