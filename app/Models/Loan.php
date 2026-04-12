@@ -14,12 +14,14 @@ class Loan extends Model
         'loan_date',
         'due_date',
         'returned_at',
+        'due_soon_notified_at',
     ];
 
     protected $casts = [
         'loan_date' => 'datetime',
         'due_date' => 'datetime',
         'returned_at' => 'datetime',
+        'due_soon_notified_at' => 'datetime',
     ];
 
     /**

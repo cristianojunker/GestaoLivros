@@ -4,6 +4,7 @@ use App\Http\Controllers\Book\BookController;
 use App\Http\Controllers\Loan\LoanController;
 use App\Http\Controllers\Loan\LoanDashboardController;
 use App\Http\Controllers\ProfileController;
+use App\Models\Loan;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -16,6 +17,13 @@ use Illuminate\Support\Facades\Route;
 | be assigned to the "web" middleware group. Make something great!
 |
 */
+
+Route::get('/test-lazy-loading', function () {
+    $loan = Loan::query()->first();
+
+    // Isto deve disparar violação se user não estiver eager loaded
+    return $loan->user->name;
+});
 
 Route::get('/', function () {
     return view('welcome');

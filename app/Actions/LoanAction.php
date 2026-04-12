@@ -87,4 +87,30 @@ class LoanAction
             ->whereNull('returned_at')
             ->exists();
     }
+
+    /**
+     * Busca empréstimos ativos com 12 horas ou menos para vencer e ainda não notificados.
+     */
+    public function listDueSoonForNotification()
+    {
+        return Loan::query()
+            ->with(['user', 'book'])
+            ->whereNull('returned_at')
+            ->whereNull('due_soon_notified_at')
+            ->where('due_date', '>', now())
+            ->where('due_date', '<=', now()->addHours(12))
+            ->get();
+    }
+
+    /**
+     * Marca que o alerta de vencimento já foi enviado.
+     */
+    public function markDueSoonNotificationAsSent(Loan $loan): Loan
+    {
+        $loan->update([
+            'due_soon_notified_at' => now(),
+        ]);
+
+        return $loan->refresh();
+    }
 }
