@@ -14,13 +14,15 @@
                 </div>
 
                 <div class="flex items-center gap-2">
-                    <a href="{{ route('books.edit', $book->id) }}"
-                       class="inline-flex items-center px-4 py-2 border border-indigo-300 rounded-md text-sm text-indigo-700 hover:bg-indigo-50 transition">
-                        Editar
-                    </a>
+                    @can('update', $book)
+                        <a href="{{ route('books.edit', $book->id) }}"
+                        class="inline-flex items-center px-4 py-2 border border-indigo-300 rounded-md text-sm text-indigo-700 hover:bg-indigo-50 transition">
+                            Editar
+                        </a>
+                    @endcan
 
                     <a href="{{ route('books.index') }}"
-                       class="inline-flex items-center px-4 py-2 border border-gray-300 rounded-md text-sm text-gray-700 hover:bg-gray-50 transition">
+                    class="inline-flex items-center px-4 py-2 border border-gray-300 rounded-md text-sm text-gray-700 hover:bg-gray-50 transition">
                         Voltar
                     </a>
                 </div>
@@ -56,18 +58,20 @@
                         </p>
                     </div>
 
-                    <div class="pt-4 border-t border-gray-200">
-                        <form action="{{ route('books.destroy', $book->id) }}" method="POST"
-                              onsubmit="return confirm('Tem certeza que deseja excluir este livro?');">
-                            @csrf
-                            @method('DELETE')
+                    @can('delete', $book)
+                        <div class="pt-4 border-t border-gray-200">
+                            <form action="{{ route('books.destroy', $book->id) }}" method="POST"
+                                onsubmit="return confirm('Tem certeza que deseja excluir este livro?');">
+                                @csrf
+                                @method('DELETE')
 
-                            <button type="submit"
-                                    class="inline-flex items-center px-4 py-2 border border-red-300 rounded-md text-sm text-red-700 hover:bg-red-50 transition">
-                                Excluir livro
-                            </button>
-                        </form>
-                    </div>
+                                <button type="submit"
+                                        class="inline-flex items-center px-4 py-2 border border-red-300 rounded-md text-sm text-red-700 hover:bg-red-50 transition">
+                                    Excluir livro
+                                </button>
+                            </form>
+                        </div>
+                    @endcan
                 </div>
             </div>
         </div>

@@ -9,14 +9,17 @@ use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 class BookAction
 {
     /**
-     * Lista os livros do usuário autenticado com paginação.
+     * Lista os livros com busca por título e paginação.
      */
-    public function listByUser(User $user): LengthAwarePaginator
+    public function list(string|null $search = null): LengthAwarePaginator
     {
         return Book::query()
-            ->where('user_id', $user->id)
+            ->when($search, function ($query, $search) {
+                $query->where('title', 'like', '%' . trim($search) . '%');
+            })
             ->latest()
-            ->paginate(10);
+            ->paginate(10)
+            ->withQueryString();
     }
 
     /**
@@ -30,17 +33,15 @@ class BookAction
     }
 
     /**
-     * Busca um livro do usuário autenticado.
+     * Busca um livro pelo id.
      */
-    public function findByUser(User $user, int $bookId): Book
+    public function findById(int $bookId): Book
     {
-        return Book::query()
-            ->where('user_id', $user->id)
-            ->findOrFail($bookId);
+        return Book::query()->findOrFail($bookId);
     }
 
     /**
-     * Atualiza um livro do usuário autenticado.
+     * Atualiza um livro.
      */
     public function update(Book $book, array $data): Book
     {

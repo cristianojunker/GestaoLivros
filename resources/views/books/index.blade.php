@@ -7,16 +7,18 @@
 
     <div class="py-8">
         <div class="max-w-6xl mx-auto sm:px-6 lg:px-8">
-            <div class="mb-4 flex items-center justify-between">
+            <div class="mb-4 flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
                 <div>
                     <h1 class="text-2xl font-bold text-gray-900">Lista de livros</h1>
-                    <p class="text-sm text-gray-600">Gerencie os livros cadastrados pelo usuário autenticado.</p>
+                    <p class="text-sm text-gray-600">Consulte os livros cadastrados no sistema.</p>
                 </div>
 
-                <a href="{{ route('books.create') }}"
-                   class="inline-flex items-center px-4 py-2 bg-indigo-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-indigo-700 transition">
-                    Novo livro
-                </a>
+                @auth
+                    <a href="{{ route('books.create') }}"
+                       class="inline-flex items-center px-4 py-2 bg-indigo-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-indigo-700 transition">
+                        Novo livro
+                    </a>
+                @endauth
             </div>
 
             @if (session('success'))
@@ -30,6 +32,38 @@
                     {{ $errors->first('error') }}
                 </div>
             @endif
+
+            <div class="mb-4 bg-white overflow-hidden shadow-sm sm:rounded-lg">
+                <div class="p-6">
+                    <form action="{{ route('books.index') }}" method="GET" class="grid grid-cols-1 gap-4 md:grid-cols-4">
+                        <div class="md:col-span-3">
+                            <label for="search" class="block text-sm font-medium text-gray-700">
+                                Buscar por título
+                            </label>
+                            <input
+                                type="text"
+                                name="search"
+                                id="search"
+                                value="{{ $search ?? '' }}"
+                                class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
+                                placeholder="Digite parte do título do livro"
+                            >
+                        </div>
+
+                        <div class="flex items-end gap-2">
+                            <button type="submit"
+                                    class="inline-flex items-center px-4 py-2 bg-indigo-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-indigo-700 transition">
+                                Buscar
+                            </button>
+
+                            <a href="{{ route('books.index') }}"
+                               class="inline-flex items-center px-4 py-2 border border-gray-300 rounded-md text-sm text-gray-700 hover:bg-gray-50 transition">
+                                Limpar
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
 
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6 text-gray-900">
@@ -71,21 +105,25 @@
                                                         Ver
                                                     </a>
 
-                                                    <a href="{{ route('books.edit', $book->id) }}"
-                                                       class="inline-flex items-center px-3 py-2 border border-indigo-300 rounded-md text-sm text-indigo-700 hover:bg-indigo-50 transition">
-                                                        Editar
-                                                    </a>
+                                                    @can('update', $book)
+                                                        <a href="{{ route('books.edit', $book->id) }}"
+                                                           class="inline-flex items-center px-3 py-2 border border-indigo-300 rounded-md text-sm text-indigo-700 hover:bg-indigo-50 transition">
+                                                            Editar
+                                                        </a>
+                                                    @endcan
 
-                                                    <form action="{{ route('books.destroy', $book->id) }}" method="POST"
-                                                          onsubmit="return confirm('Tem certeza que deseja excluir este livro?');">
-                                                        @csrf
-                                                        @method('DELETE')
+                                                    @can('delete', $book)
+                                                        <form action="{{ route('books.destroy', $book->id) }}" method="POST"
+                                                              onsubmit="return confirm('Tem certeza que deseja excluir este livro?');">
+                                                            @csrf
+                                                            @method('DELETE')
 
-                                                        <button type="submit"
-                                                                class="inline-flex items-center px-3 py-2 border border-red-300 rounded-md text-sm text-red-700 hover:bg-red-50 transition">
-                                                            Excluir
-                                                        </button>
-                                                    </form>
+                                                            <button type="submit"
+                                                                    class="inline-flex items-center px-3 py-2 border border-red-300 rounded-md text-sm text-red-700 hover:bg-red-50 transition">
+                                                                Excluir
+                                                            </button>
+                                                        </form>
+                                                    @endcan
                                                 </div>
                                             </td>
                                         </tr>
@@ -99,15 +137,17 @@
                         </div>
                     @else
                         <div class="rounded-md border border-dashed border-gray-300 p-8 text-center">
-                            <h3 class="text-lg font-semibold text-gray-900">Nenhum livro cadastrado</h3>
+                            <h3 class="text-lg font-semibold text-gray-900">Nenhum livro encontrado</h3>
                             <p class="mt-2 text-sm text-gray-600">
-                                Comece cadastrando o primeiro livro do sistema.
+                                Tente ajustar a busca ou cadastre um novo livro.
                             </p>
 
-                            <a href="{{ route('books.create') }}"
-                               class="mt-4 inline-flex items-center px-4 py-2 bg-indigo-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-indigo-700 transition">
-                                Cadastrar livro
-                            </a>
+                            @auth
+                                <a href="{{ route('books.create') }}"
+                                   class="mt-4 inline-flex items-center px-4 py-2 bg-indigo-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-indigo-700 transition">
+                                    Cadastrar livro
+                                </a>
+                            @endauth
                         </div>
                     @endif
                 </div>

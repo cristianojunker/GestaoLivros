@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Book\BookRequest;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Http\Request;
 use Illuminate\View\View;
 use Throwable;
 
@@ -16,11 +17,12 @@ class BookController extends Controller
         private readonly BookAction $bookAction
     ) {}
 
-    public function index(): View
+    public function index(Request $request): View
     {
-        $books = $this->bookAction->listByUser(Auth::user());
+        $search = $request->string('search')->toString();
+        $books = $this->bookAction->list($search);
 
-        return view('books.index', compact('books'));
+        return view('books.index', compact('books', 'search'));
     }
 
     public function create(): View
@@ -49,14 +51,16 @@ class BookController extends Controller
 
     public function show(int $book): View
     {
-        $book = $this->bookAction->findByUser(Auth::user(), $book);
+        $book = $this->bookAction->findById($book);
 
         return view('books.show', compact('book'));
     }
 
     public function edit(int $book): View
     {
-        $book = $this->bookAction->findByUser(Auth::user(), $book);
+        $book = $this->bookAction->findById($book);
+
+        $this->authorize('update', $book);
 
         return view('books.edit', compact('book'));
     }
@@ -64,7 +68,10 @@ class BookController extends Controller
     public function update(BookRequest $request, int $book): RedirectResponse
     {
         try {
-            $bookModel = $this->bookAction->findByUser(Auth::user(), $book);
+            $bookModel = $this->bookAction->findById($book);
+
+            $this->authorize('update', $bookModel);
+
             $this->bookAction->update($bookModel, $request->validated());
 
             return redirect()
@@ -84,7 +91,10 @@ class BookController extends Controller
     public function destroy(int $book): RedirectResponse
     {
         try {
-            $bookModel = $this->bookAction->findByUser(Auth::user(), $book);
+            $bookModel = $this->bookAction->findById($book);
+
+            $this->authorize('delete', $bookModel);
+
             $this->bookAction->delete($bookModel);
 
             return redirect()
