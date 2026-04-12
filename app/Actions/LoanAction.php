@@ -6,6 +6,7 @@ use App\Models\Book;
 use App\Models\Loan;
 use App\Models\User;
 use Carbon\Carbon;
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use DomainException;
 
 class LoanAction
@@ -23,6 +24,34 @@ class LoanAction
             'loan_date' => now(),
             'due_date' => Carbon::now()->addDays(2),
         ]);
+    }
+
+    /**
+     * Lista os empréstimos ativos com usuário e livro.
+     */
+    public function listActive(): LengthAwarePaginator
+    {
+        return Loan::query()
+            ->with(['user', 'book'])
+            ->whereNull('returned_at')
+            ->orderBy('due_date')
+            ->paginate(10);
+    }
+
+    /**
+     * Registra a devolução de um empréstimo.
+     */
+    public function returnLoan(Loan $loan): Loan
+    {
+        if (! is_null($loan->returned_at)) {
+            throw new DomainException('Este empréstimo já foi devolvido.');
+        }
+
+        $loan->update([
+            'returned_at' => now(),
+        ]);
+
+        return $loan->refresh();
     }
 
     /**

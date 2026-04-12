@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
@@ -43,5 +44,23 @@ class Loan extends Model
     public function isActive(): bool
     {
         return is_null($this->returned_at);
+    }
+
+    /**
+     * Verifica se o empréstimo está atrasado.
+     */
+    public function isOverdue(): bool
+    {
+        return $this->isActive() && $this->due_date->isPast();
+    }
+
+    /**
+     * Verifica se o empréstimo está próximo do vencimento.
+     */
+    public function isCloseToDue(): bool
+    {
+        return $this->isActive()
+            && ! $this->isOverdue()
+            && Carbon::now()->diffInHours($this->due_date, false) <= 12;
     }
 }

@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Book\BookController;
 use App\Http\Controllers\Loan\LoanController;
+use App\Http\Controllers\Loan\LoanDashboardController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 
@@ -32,6 +33,12 @@ Route::middleware('auth')->group(function () {
 
     //Empréstimos
     Route::post('/loans', [LoanController::class, 'store'])->name('loans.store');
+
+    Route::get('/loans/dashboard', [LoanDashboardController::class, 'index'])
+        ->name('loans.dashboard');
+
+    Route::patch('/loans/{loan}/return', [LoanController::class, 'registerReturn'])
+        ->name('loans.return');
 });
 
 //Livros

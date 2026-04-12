@@ -6,6 +6,7 @@ use App\Actions\BookAction;
 use App\Actions\LoanAction;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Loan\LoanRequest;
+use App\Models\Loan;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Auth;
 use DomainException;
@@ -37,6 +38,31 @@ class LoanController extends Controller
 
             return back()->withErrors([
                 'error' => 'Ocorreu um erro ao realizar o empréstimo.',
+            ]);
+        }
+    }
+
+    public function registerReturn(string $loan): RedirectResponse
+    {
+        try {
+            $loanModel = Loan::query()
+                ->whereNull('returned_at')
+                ->findOrFail((int) $loan);
+
+            $this->loanAction->returnLoan($loanModel);
+
+            return redirect()
+                ->route('loans.dashboard')
+                ->with('success', 'Devolução registrada com sucesso.');
+        } catch (DomainException $e) {
+            return back()->withErrors([
+                'error' => $e->getMessage(),
+            ]);
+        } catch (Throwable $e) {
+            report($e);
+
+            return back()->withErrors([
+                'error' => 'Ocorreu um erro ao registrar a devolução.',
             ]);
         }
     }
