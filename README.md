@@ -39,7 +39,7 @@ Antes de executar o projeto, certifique-se de ter instalado em sua máquina:
 Clone o repositório e entre na pasta do projeto:
 
 ```bash
-git clone <URL_DO_REPOSITORIO>
+git clone https://github.com/cristianojunker/GestaoLivros.git
 cd GestaoLivros
 ```
 
