@@ -378,3 +378,20 @@ Executar verificação manual de vencimento:
 ```bash
 php artisan loans:check-due-soon
 ```
+---
+
+## Testes automatizados
+
+O projeto possui testes automatizados para regras principais do sistema, incluindo:
+
+- listagem e visualização de livros
+- criação de livros por usuário autenticado
+- restrições de edição e remoção de livros de outros usuários
+- regras de empréstimo
+- devolução de livros
+- comando de alerta de vencimento
+
+### Como rodar os testes
+
+```bash
+php artisan test
