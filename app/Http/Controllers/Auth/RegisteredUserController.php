@@ -15,11 +15,13 @@ class RegisteredUserController extends Controller
         private readonly AuthAction $authAction
     ) {}
 
+    // Retorna a view de cadastro
     public function create(): View
     {
         return view('auth.register');
     }
 
+    // Faz o cadastro a partir da action
     public function store(RegisterRequest $request): RedirectResponse
     {
         $this->authAction->register($request->validated());

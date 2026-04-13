@@ -21,6 +21,7 @@ class LoanController extends Controller
         private readonly BookAction $bookAction
     ) {}
 
+    // Cria um empréstimo após buscar o livro pelo id
     public function store(LoanRequest $request): RedirectResponse
     {
         $book = $this->bookAction->findById((int) $request->validated('book_id'));
@@ -43,6 +44,7 @@ class LoanController extends Controller
             ->with('success', 'Empréstimo realizado com sucesso.');
     }
 
+    // Registra a devolução de um empréstimo
     public function registerReturn(string $loan): RedirectResponse
     {
         $loanModel = Loan::query()->findOrFail((int) $loan);

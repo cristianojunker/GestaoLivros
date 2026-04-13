@@ -44,11 +44,13 @@ class User extends Authenticatable
         'password' => 'hashed',
     ];
 
+    // Relacionamento de um para muitos com a Model Loan (Empréstimo)
     public function loans(): HasMany
     {
         return $this->hasMany(Loan::class);
     }
     
+    // Relacionamento de um para muitos com a Model Book (Livro)
     public function books(): HasMany
     {
         return $this->hasMany(Book::class);

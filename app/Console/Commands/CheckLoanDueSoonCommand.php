@@ -24,6 +24,7 @@ class CheckLoanDueSoonCommand extends Command
      */
     public function handle(): int
     {
+        // Busca empréstimos com 12 horas ou menos para vencer
         $loans = $this->loanAction->listDueSoonForNotification();
 
         if ($loans->isEmpty()) {
@@ -33,8 +34,9 @@ class CheckLoanDueSoonCommand extends Command
         }
 
         foreach ($loans as $loan) {
+            // Envia o alerta por e-mail
             Mail::to($loan->user->email)->queue(new LoanDueSoonMail($loan));
-
+            // Marca que o alerta de vencimento foi enviado
             $this->loanAction->markDueSoonNotificationAsSent($loan);
         }
 

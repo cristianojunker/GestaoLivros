@@ -11,6 +11,7 @@ class LoanRequest extends FormRequest
         return auth()->check();
     }
 
+    //Regras de validação do formulário
     public function rules(): array
     {
         return [
@@ -18,6 +19,7 @@ class LoanRequest extends FormRequest
         ];
     }
 
+    //Mensagens de erro do formulário
     public function messages(): array
     {
         return [

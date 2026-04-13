@@ -13,6 +13,7 @@ use App\Http\Requests\Auth\LoginRequest;
 
 class AuthAction
 {
+    // Função que registra um novo usuário
     public function register(array $data): User
     {
         $data['name'] = trim($data['name']);
@@ -28,6 +29,7 @@ class AuthAction
         return $user;
     }
 
+    // Função que loga um usuário
     public function login(LoginRequest $request): void
     {
         $this->ensureIsNotRateLimited($request);
@@ -50,6 +52,7 @@ class AuthAction
         $request->session()->regenerate();
     }
 
+    // Função que verifica se o usuário foi bloqueado
     protected function ensureIsNotRateLimited(LoginRequest $request): void
     {
         if (! RateLimiter::tooManyAttempts($request->throttleKey(), 5)) {
@@ -68,6 +71,7 @@ class AuthAction
         ]);
     }
 
+    // Função que desloga um usuário
     public function logout(): void
     {
         Auth::logout();

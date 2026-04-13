@@ -15,11 +15,13 @@ class AuthenticatedSessionController extends Controller
         private readonly AuthAction $authAction
     ) {}
 
+    // Retorna a view de login
     public function create(): View
     {
         return view('auth.login');
     }
 
+    // Faz o login a partir da action
     public function store(LoginRequest $request): RedirectResponse
     {
         $this->authAction->login($request);
@@ -27,6 +29,7 @@ class AuthenticatedSessionController extends Controller
         return redirect()->intended(RouteServiceProvider::HOME);
     }
 
+    // Faz o logout a partir da action
     public function destroy(): RedirectResponse
     {
         $this->authAction->logout();

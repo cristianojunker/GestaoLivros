@@ -59,6 +59,9 @@ class Book extends Model
         });
     }
 
+    /**
+     * Retorna a URL da capa do livro.
+     */
     public function getCoverImageUrlAttribute(): ?string
     {
         if (! $this->cover_image) {

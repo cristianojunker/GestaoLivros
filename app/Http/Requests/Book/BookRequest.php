@@ -11,6 +11,7 @@ class BookRequest extends FormRequest
         return true;
     }
 
+    //Regras de validação do formulário
     public function rules(): array
     {
         return [
@@ -22,6 +23,7 @@ class BookRequest extends FormRequest
         ];
     }
 
+    //Mensagens de erro do formulário
     public function messages(): array
     {
         return [
