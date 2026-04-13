@@ -4,12 +4,14 @@ namespace App\Http\Controllers\Loan;
 
 use App\Actions\BookAction;
 use App\Actions\LoanAction;
+use App\Exceptions\BookUnavailableForLoanException;
+use App\Exceptions\LoanAlreadyReturnedException;
+use App\Exceptions\LoanLimitReachedException;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Loan\LoanRequest;
 use App\Models\Loan;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Auth;
-use DomainException;
 use Throwable;
 
 class LoanController extends Controller
@@ -21,49 +23,45 @@ class LoanController extends Controller
 
     public function store(LoanRequest $request): RedirectResponse
     {
+        $book = $this->bookAction->findById((int) $request->validated('book_id'));
+
         try {
-            $book = $this->bookAction->findById((int) $request->validated('book_id'));
-
             $this->loanAction->create(Auth::user(), $book);
-
-            return redirect()
-                ->route('books.show', $book->id)
-                ->with('success', 'Empréstimo realizado com sucesso.');
-        } catch (DomainException $e) {
+        } catch (LoanLimitReachedException | BookUnavailableForLoanException $e) {
             return back()->withErrors([
                 'error' => $e->getMessage(),
             ]);
-        } catch (Throwable $e) {
+        }catch (Throwable $e) {
             report($e);
-
             return back()->withErrors([
-                'error' => 'Ocorreu um erro ao realizar o empréstimo.',
+                'error' => 'Ocorreu um erro ao realizar o empréstimo. Por favor, tente novamente.',
             ]);
-        }
+        } 
+
+        return redirect()
+            ->route('books.show', $book->id)
+            ->with('success', 'Empréstimo realizado com sucesso.');
     }
 
     public function registerReturn(string $loan): RedirectResponse
     {
+        $loanModel = Loan::query()->findOrFail((int) $loan);
+
         try {
-            $loanModel = Loan::query()
-                ->whereNull('returned_at')
-                ->findOrFail((int) $loan);
-
             $this->loanAction->returnLoan($loanModel);
-
-            return redirect()
-                ->route('loans.dashboard')
-                ->with('success', 'Devolução registrada com sucesso.');
-        } catch (DomainException $e) {
+        } catch (LoanAlreadyReturnedException $e) {
             return back()->withErrors([
                 'error' => $e->getMessage(),
             ]);
         } catch (Throwable $e) {
             report($e);
-
             return back()->withErrors([
-                'error' => 'Ocorreu um erro ao registrar a devolução.',
+                'error' => 'Ocorreu um erro ao registrar a devolução. Por favor, tente novamente.',
             ]);
-        }
+        } 
+
+        return redirect()
+            ->route('loans.dashboard')
+            ->with('success', 'Devolução registrada com sucesso.');
     }
 }

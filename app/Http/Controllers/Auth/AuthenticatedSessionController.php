@@ -7,9 +7,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Auth\LoginRequest;
 use App\Providers\RouteServiceProvider;
 use Illuminate\Http\RedirectResponse;
-use Illuminate\Validation\ValidationException;
 use Illuminate\View\View;
-use Throwable;
 
 class AuthenticatedSessionController extends Controller
 {
@@ -24,35 +22,15 @@ class AuthenticatedSessionController extends Controller
 
     public function store(LoginRequest $request): RedirectResponse
     {
-        try {
-            $this->authAction->login($request);
+        $this->authAction->login($request);
 
-            return redirect()->intended(RouteServiceProvider::HOME);
-        } catch (ValidationException $e) {
-            throw $e;
-        } catch (Throwable $e) {
-            report($e);
-
-            return back()
-                ->withInput($request->only('email', 'remember'))
-                ->withErrors([
-                    'error' => 'Ocorreu um erro ao realizar o login. Por favor, tente novamente.',
-                ]);
-        }
+        return redirect()->intended(RouteServiceProvider::HOME);
     }
 
     public function destroy(): RedirectResponse
     {
-        try {
-            $this->authAction->logout();
+        $this->authAction->logout();
 
-            return redirect('/');
-        } catch (Throwable $e) {
-            report($e);
-
-            return back()->withErrors([
-                'error' => 'Ocorreu um erro ao realizar logout. Por favor, tente novamente.',
-            ]);
-        }
+        return redirect('/');
     }
 }

@@ -34,16 +34,10 @@ class BookController extends Controller
     {
         try {
             $this->bookAction->create(Auth::user(), $request->validated());
-
-            return redirect()
-                ->route('books.index')
-                ->with('success', 'Livro cadastrado com sucesso.');
+            return redirect()->route('books.index')->with('success', 'Livro cadastrado com sucesso.');
         } catch (Throwable $e) {
             report($e);
-
-            return back()
-                ->withInput()
-                ->withErrors([
+            return back()->withInput()->withErrors([
                     'error' => 'Ocorreu um erro ao cadastrar o livro.',
                 ]);
         }
@@ -59,7 +53,6 @@ class BookController extends Controller
     public function edit(int $book): View
     {
         $book = $this->bookAction->findById($book);
-
         $this->authorize('update', $book);
 
         return view('books.edit', compact('book'));
@@ -67,22 +60,15 @@ class BookController extends Controller
 
     public function update(BookRequest $request, int $book): RedirectResponse
     {
+        $bookModel = $this->bookAction->findById($book);
+        $this->authorize('update', $bookModel);
+        
         try {
-            $bookModel = $this->bookAction->findById($book);
-
-            $this->authorize('update', $bookModel);
-
             $this->bookAction->update($bookModel, $request->validated());
-
-            return redirect()
-                ->route('books.index')
-                ->with('success', 'Livro atualizado com sucesso.');
+            return redirect()->route('books.index')->with('success', 'Livro atualizado com sucesso.');
         } catch (Throwable $e) {
             report($e);
-
-            return back()
-                ->withInput()
-                ->withErrors([
+            return back()->withInput()->withErrors([
                     'error' => 'Ocorreu um erro ao atualizar o livro.',
                 ]);
         }
@@ -90,19 +76,14 @@ class BookController extends Controller
 
     public function destroy(int $book): RedirectResponse
     {
+        $bookModel = $this->bookAction->findById($book);
+        $this->authorize('delete', $bookModel);
+
         try {
-            $bookModel = $this->bookAction->findById($book);
-
-            $this->authorize('delete', $bookModel);
-
             $this->bookAction->delete($bookModel);
-
-            return redirect()
-                ->route('books.index')
-                ->with('success', 'Livro removido com sucesso.');
+            return redirect()->route('books.index')->with('success', 'Livro removido com sucesso.');
         } catch (Throwable $e) {
             report($e);
-
             return back()->withErrors([
                 'error' => 'Ocorreu um erro ao remover o livro.',
             ]);

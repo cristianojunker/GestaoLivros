@@ -2,12 +2,15 @@
 
 namespace App\Actions;
 
+use App\Exceptions\BookUnavailableForLoanException;
+use App\Exceptions\LoanAlreadyReturnedException;
+use App\Exceptions\LoanLimitReachedException;
 use App\Models\Book;
 use App\Models\Loan;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
-use DomainException;
+use Illuminate\Support\Collection;
 
 class LoanAction
 {
@@ -44,7 +47,7 @@ class LoanAction
     public function returnLoan(Loan $loan): Loan
     {
         if (! is_null($loan->returned_at)) {
-            throw new DomainException('Este empréstimo já foi devolvido.');
+            throw new LoanAlreadyReturnedException();
         }
 
         $loan->update([
@@ -60,11 +63,11 @@ class LoanAction
     private function validateLoanRules(User $user, Book $book): void
     {
         if ($this->hasReachedLoanLimit($user)) {
-            throw new DomainException('O usuário já possui 3 livros emprestados no momento.');
+            throw new LoanLimitReachedException();
         }
 
         if (! $this->isBookAvailable($book)) {
-            throw new DomainException('Este livro não está disponível para empréstimo.');
+            throw new BookUnavailableForLoanException();
         }
     }
 
@@ -91,7 +94,7 @@ class LoanAction
     /**
      * Busca empréstimos ativos com 12 horas ou menos para vencer e ainda não notificados.
      */
-    public function listDueSoonForNotification()
+    public function listDueSoonForNotification(): Collection
     {
         return Loan::query()
             ->with(['user', 'book'])
