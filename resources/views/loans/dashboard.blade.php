@@ -1,14 +1,14 @@
 <x-app-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            {{ __('Loans Dashboard') }}
+            {{ __('Painel de Empréstimos') }}
         </h2>
     </x-slot>
 
     <div class="py-8">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="mb-4">
-                <h1 class="text-2xl font-bold text-gray-900">Dashboard de empréstimos</h1>
+                <h1 class="text-2xl font-bold text-gray-900">Painel de empréstimos</h1>
                 <p class="text-sm text-gray-600">Acompanhe os empréstimos ativos e registre devoluções.</p>
             </div>
 
@@ -90,7 +90,7 @@
                                             <td class="px-4 py-4">
                                                 <div class="flex items-center justify-end">
                                                     <form action="{{ route('loans.return', $loan->id) }}" method="POST"
-                                                          onsubmit="return confirm('Tem certeza que deseja registrar a devolução deste livro?');">
+                                                          onsubmit="return confirm('Tem certeza de que deseja registrar a devolução deste livro?');">
                                                         @csrf
                                                         @method('PATCH')
 
@@ -114,7 +114,7 @@
                         <div class="rounded-md border border-dashed border-gray-300 p-8 text-center">
                             <h3 class="text-lg font-semibold text-gray-900">Nenhum empréstimo ativo</h3>
                             <p class="mt-2 text-sm text-gray-600">
-                                No momento, não existem livros emprestados.
+                                No momento, não há livros emprestados.
                             </p>
                         </div>
                     @endif

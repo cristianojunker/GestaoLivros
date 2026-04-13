@@ -13,15 +13,12 @@
                 <!-- Links de navegação -->
                 <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
                     <x-nav-link :href="route('books.index')" :active="request()->routeIs('books.*')">
-                        {{ __('Books') }}
+                        {{ __('Livros') }}
                     </x-nav-link>
 
                     @auth
-                        <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
-                            {{ __('Dashboard') }}
-                        </x-nav-link>
                         <x-nav-link :href="route('loans.dashboard')" :active="request()->routeIs('loans.dashboard')">
-                            {{ __('Loans Dashboard') }}
+                            {{ __('Painel de Empréstimos') }}
                         </x-nav-link>
                     @endauth
                 </div>
@@ -45,7 +42,7 @@
 
                         <x-slot name="content">
                             <x-dropdown-link :href="route('profile.edit')">
-                                {{ __('Profile') }}
+                                {{ __('Perfil') }}
                             </x-dropdown-link>
 
                             <form method="POST" action="{{ route('logout') }}">
@@ -53,7 +50,7 @@
 
                                 <x-dropdown-link :href="route('logout')"
                                                  onclick="event.preventDefault(); this.closest('form').submit();">
-                                    {{ __('Log Out') }}
+                                    {{ __('Sair') }}
                                 </x-dropdown-link>
                             </form>
                         </x-slot>
@@ -87,15 +84,12 @@
     <div :class="{ 'block': open, 'hidden': ! open }" class="hidden sm:hidden">
         <div class="pt-2 pb-3 space-y-1">
             <x-responsive-nav-link :href="route('books.index')" :active="request()->routeIs('books.*')">
-                {{ __('Books') }}
+                {{ __('Livros') }}
             </x-responsive-nav-link>
 
             @auth
-                <x-responsive-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
-                    {{ __('Dashboard') }}
-                </x-responsive-nav-link>
                 <x-responsive-nav-link :href="route('loans.dashboard')" :active="request()->routeIs('loans.dashboard')">
-                    {{ __('Loans Dashboard') }}
+                    {{ __('Painel de Empréstimos') }}
                 </x-responsive-nav-link>
             @endauth
         </div>
@@ -109,7 +103,7 @@
 
                 <div class="mt-3 space-y-1">
                     <x-responsive-nav-link :href="route('profile.edit')">
-                        {{ __('Profile') }}
+                        {{ __('Perfil') }}
                     </x-responsive-nav-link>
 
                     <form method="POST" action="{{ route('logout') }}">
@@ -117,7 +111,7 @@
 
                         <x-responsive-nav-link :href="route('logout')"
                                                onclick="event.preventDefault(); this.closest('form').submit();">
-                            {{ __('Log Out') }}
+                            {{ __('Sair') }}
                         </x-responsive-nav-link>
                     </form>
                 </div>
