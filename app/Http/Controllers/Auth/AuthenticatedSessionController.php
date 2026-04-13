@@ -25,15 +25,7 @@ class AuthenticatedSessionController extends Controller
     public function store(LoginRequest $request): RedirectResponse
     {
         try {
-            $data = $request->validated();
-
-            $this->authAction->login(
-                credentials: [
-                    'email' => $data['email'],
-                    'password' => $data['password'],
-                ],
-                remember: $data['remember'] ?? false
-            );
+            $this->authAction->login($request);
 
             return redirect()->intended(RouteServiceProvider::HOME);
         } catch (ValidationException $e) {
