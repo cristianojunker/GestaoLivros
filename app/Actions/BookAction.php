@@ -5,6 +5,8 @@ namespace App\Actions;
 use App\Models\Book;
 use App\Models\User;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
+use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Storage;
 
 class BookAction
 {
@@ -33,6 +35,10 @@ class BookAction
     {
         $data['user_id'] = $user->id;
 
+        if (($data['cover_image'] ?? null) instanceof UploadedFile) {
+            $data['cover_image'] = $data['cover_image']->store('book-covers', 'public');
+        }
+
         return Book::create($data);
     }
 
@@ -51,6 +57,17 @@ class BookAction
      */
     public function update(Book $book, array $data): Book
     {
+
+        if (($data['cover_image'] ?? null) instanceof UploadedFile) {
+            if ($book->cover_image) {
+                Storage::disk('public')->delete($book->cover_image);
+            }
+
+            $data['cover_image'] = $data['cover_image']->store('book-covers', 'public');
+        } else {
+            unset($data['cover_image']);
+        }
+
         $book->update($data);
 
         return $book;
@@ -61,6 +78,9 @@ class BookAction
      */
     public function delete(Book $book): void
     {
+        if ($book->cover_image) {
+            Storage::disk('public')->delete($book->cover_image);
+        }
         $book->delete();
     }
 }

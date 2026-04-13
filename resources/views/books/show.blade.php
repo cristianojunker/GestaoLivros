@@ -43,6 +43,23 @@
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6 space-y-6">
                     <div>
+                        <h3 class="text-sm font-medium text-gray-500">Capa</h3>
+                        <div class="mt-2">
+                            @if ($book->cover_image_url)
+                                <img
+                                    src="{{ $book->cover_image_url }}"
+                                    alt="Capa de {{ $book->title }}"
+                                    class="h-56 rounded border object-cover"
+                                >
+                            @else
+                                <div class="h-56 w-40 rounded border bg-gray-100 flex items-center justify-center text-sm text-gray-500 text-center px-4">
+                                    Nenhuma capa cadastrada
+                                </div>
+                            @endif
+                        </div>
+                    </div>
+
+                    <div>
                         <h3 class="text-sm font-medium text-gray-500">Título</h3>
                         <p class="mt-1 text-base text-gray-900">{{ $book->title }}</p>
                     </div>

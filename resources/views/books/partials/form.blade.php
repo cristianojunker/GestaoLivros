@@ -17,6 +17,38 @@
     </div>
 
     <div>
+        <label for="cover_image" class="block text-sm font-medium text-gray-700">
+            Imagem da capa
+        </label>
+
+        @if ($book?->cover_image_url ?? null)
+            <div class="mt-2 mb-3">
+                <img
+                    src="{{ $book->cover_image_url }}"
+                    alt="Capa de {{ $book->title }}"
+                    class="h-32 rounded border object-cover"
+                >
+            </div>
+
+            <p class="mb-2 text-sm text-gray-500">
+                Envie uma nova imagem apenas se quiser substituir a capa atual.
+            </p>
+        @endif
+
+        <input
+            id="cover_image"
+            name="cover_image"
+            type="file"
+            accept=".jpg,.jpeg,.png,.webp,image/jpeg,image/png,image/webp"
+            class="block mt-1 w-full border-gray-300 rounded-md shadow-sm"
+        >
+
+        @error('cover_image')
+            <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+        @enderror
+    </div>
+
+    <div>
         <label for="author" class="block text-sm font-medium text-gray-700">
             Autor <span class="text-red-500">*</span>
         </label>

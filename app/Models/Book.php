@@ -17,6 +17,7 @@ class Book extends Model
         'title',
         'author',
         'description',
+        'cover_image',
         'published_year',
     ];
 
@@ -56,5 +57,14 @@ class Book extends Model
         return $query->whereDoesntHave('loans', function ($query) {
             $query->whereNull('returned_at');
         });
+    }
+
+    public function getCoverImageUrlAttribute(): ?string
+    {
+        if (! $this->cover_image) {
+            return null;
+        }
+
+        return asset('storage/' . $this->cover_image);
     }
 }

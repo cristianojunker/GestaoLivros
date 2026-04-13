@@ -73,6 +73,9 @@
                                 <thead>
                                     <tr>
                                         <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                            Capa
+                                        </th>
+                                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                             Título
                                         </th>
                                         <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
@@ -93,6 +96,20 @@
                                 <tbody class="bg-white divide-y divide-gray-200">
                                     @foreach ($books as $book)
                                         <tr>
+                                            <td class="px-4 py-4">
+                                                @if ($book->cover_image_url)
+                                                    <img
+                                                        src="{{ $book->cover_image_url }}"
+                                                        alt="Capa de {{ $book->title }}"
+                                                        class="h-16 w-12 rounded border object-cover"
+                                                    >
+                                                @else
+                                                    <div class="h-16 w-12 rounded border bg-gray-100 flex items-center justify-center text-[10px] text-gray-500 text-center px-1">
+                                                        Sem capa
+                                                    </div>
+                                                @endif
+                                            </td>
+
                                             <td class="px-4 py-4 font-medium text-gray-900">
                                                 {{ $book->title }}
                                             </td>

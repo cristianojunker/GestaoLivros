@@ -142,6 +142,16 @@ http://127.0.0.1:8000
 
 ---
 
+## Link simbólico do storage
+
+Para que as imagens enviadas dos livros fiquem acessíveis no navegador, é necessário criar o link simbólico do storage:
+
+```bash
+php artisan storage:link
+```
+
+---
+
 ## Autenticação
 
 O sistema possui autenticação de usuários para controle de acesso às funcionalidades da aplicação.

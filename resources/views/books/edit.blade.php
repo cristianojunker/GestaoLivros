@@ -20,7 +20,7 @@
 
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6">
-                    <form action="{{ route('books.update', $book->id) }}" method="POST" class="space-y-6">
+                    <form action="{{ route('books.update', $book->id) }}" method="POST" class="space-y-6" enctype="multipart/form-data">
                         @csrf
                         @method('PUT')
 
