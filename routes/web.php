@@ -18,13 +18,6 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/test-lazy-loading', function () {
-    $loan = Loan::query()->first();
-
-    // Isto deve disparar violação se user não estiver eager loaded
-    return $loan->user->name;
-});
-
 Route::get('/', function () {
     return view('welcome');
 });
