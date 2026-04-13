@@ -1,66 +1,380 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# GestaoLivros
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+Sistema desenvolvido em **Laravel 10**, **PHP 8** e **MySQL** para gerenciamento de livros e empréstimos, com autenticação de usuários, controle de permissões e alerta de vencimento por e-mail.
 
-## About Laravel
+---
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+## Objetivo do sistema
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+O **GestaoLivros** tem como objetivo gerenciar o fluxo de empréstimos de livros, permitindo o cadastro e controle de usuários, livros e empréstimos, além de monitorar vencimentos e enviar notificações automáticas por e-mail para empréstimos próximos da data limite.
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+---
 
-## Learning Laravel
+## Tecnologias utilizadas
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+- PHP 8.x
+- Laravel 10
+- MySQL
+- Composer
+- Node.js
+- NPM
+- Vite
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+---
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+## Requisitos mínimos
 
-## Laravel Sponsors
+Antes de executar o projeto, certifique-se de ter instalado em sua máquina:
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+- PHP 8.x
+- Composer
+- Node.js e NPM
+- MySQL
+- Git (opcional, mas recomendado)
 
-### Premium Partners
+---
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[WebReinvent](https://webreinvent.com/)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Jump24](https://jump24.co.uk)**
-- **[Redberry](https://redberry.international/laravel/)**
-- **[Active Logic](https://activelogic.com)**
-- **[byte5](https://byte5.de)**
-- **[OP.GG](https://op.gg)**
+## Instalação do projeto
 
-## Contributing
+Clone o repositório e entre na pasta do projeto:
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+```bash
+git clone <URL_DO_REPOSITORIO>
+cd GestaoLivros
+```
 
-## Code of Conduct
+Instale as dependências do backend:
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+```bash
+composer install
+```
 
-## Security Vulnerabilities
+Instale as dependências do frontend:
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+```bash
+npm install
+```
 
-## License
+Copie o arquivo de ambiente:
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+```bash
+cp .env.example .env
+```
+
+No Windows, caso o comando acima não funcione, utilize:
+
+```bash
+copy .env.example .env
+```
+
+Gere a chave da aplicação:
+
+```bash
+php artisan key:generate
+```
+
+---
+
+## Configuração do ambiente
+
+Edite o arquivo `.env` e configure as credenciais do banco de dados:
+
+```env
+APP_NAME=GestaoLivros
+APP_ENV=local
+APP_KEY=
+APP_DEBUG=true
+APP_URL=http://127.0.0.1:8000
+
+DB_CONNECTION=mysql
+DB_HOST=127.0.0.1
+DB_PORT=3306
+DB_DATABASE=gestaolivros
+DB_USERNAME=seu_usuario
+DB_PASSWORD=sua_senha
+```
+
+---
+
+## Banco de dados
+
+Crie manualmente um banco de dados no MySQL com o mesmo nome definido no `.env`.
+
+Depois execute as migrations:
+
+```bash
+php artisan migrate
+```
+
+Caso o projeto possua seeders, execute:
+
+```bash
+php artisan db:seed
+```
+
+Ou, se desejar rodar migrations e seeders juntos:
+
+```bash
+php artisan migrate --seed
+```
+
+---
+
+## Executando o projeto
+
+Inicie o servidor local do Laravel:
+
+```bash
+php artisan serve
+```
+
+Em outro terminal, execute os assets do frontend:
+
+```bash
+npm run dev
+```
+
+A aplicação ficará disponível em:
+
+```bash
+http://127.0.0.1:8000
+```
+
+---
+
+## Autenticação
+
+O sistema possui autenticação de usuários para controle de acesso às funcionalidades da aplicação.
+
+Dependendo da implementação do projeto, o acesso pode ser realizado por usuários previamente cadastrados no banco ou criados pelo fluxo de registro/autenticação disponível na interface.
+
+---
+
+## Filas
+
+O projeto utiliza **fila** para processar o envio de e-mails de alerta de vencimento, evitando impacto direto na resposta da aplicação.
+
+Para executar o worker da fila:
+
+```bash
+php artisan queue:work
+```
+
+Se estiver utilizando o driver `database`, certifique-se de preparar a estrutura da fila conforme documentado na seção de teste do alerta por e-mail.
+
+---
+
+## Scheduler
+
+O sistema pode utilizar tarefas agendadas para execução automática de rotinas.
+
+Para rodar o agendador localmente:
+
+```bash
+php artisan schedule:work
+```
+
+Em ambiente de servidor, o ideal é configurar um cron para executar:
+
+```bash
+php artisan schedule:run
+```
+
+Exemplo de configuração no cron:
+
+```bash
+* * * * * cd /caminho/do/projeto && php artisan schedule:run >> /dev/null 2>&1
+```
+
+---
+
+## Teste do alerta de vencimento por e-mail
+
+O sistema possui um comando que verifica empréstimos com **12 horas ou menos para vencer** e envia um alerta por e-mail usando fila.
+
+### Configuração
+
+No arquivo `.env`, utilize:
+
+```env
+MAIL_MAILER=log
+QUEUE_CONNECTION=database
+```
+
+### Preparar a fila
+
+Execute:
+
+```bash
+php artisan queue:table
+php artisan migrate
+```
+
+### Rodar o worker da fila
+
+Execute em um terminal separado:
+
+```bash
+php artisan queue:work
+```
+
+### Executar a verificação manualmente
+
+Execute:
+
+```bash
+php artisan loans:check-due-soon
+```
+
+### Como simular um empréstimo próximo do vencimento
+
+Ajuste manualmente o campo `due_date` de um empréstimo ativo no banco para uma data com menos de 12 horas de diferença em relação ao horário atual.
+
+Exemplo SQL:
+
+```sql
+UPDATE loans
+SET due_date = DATE_ADD(NOW(), INTERVAL 6 HOUR),
+    due_soon_notified_at = NULL
+WHERE id = 1;
+```
+
+### Verificar o envio
+
+Como o projeto utiliza `MAIL_MAILER=log`, o conteúdo do e-mail será registrado em:
+
+```bash
+storage/logs/laravel.log
+```
+
+---
+
+## Como testar o fluxo principal do sistema
+
+Uma sugestão de fluxo para validação manual da aplicação:
+
+1. Acesse o sistema com um usuário autenticado.
+2. Cadastre ou verifique a existência de livros no banco.
+3. Realize um empréstimo para um usuário.
+4. Consulte a listagem de empréstimos.
+5. Ajuste manualmente a data de vencimento de um empréstimo para menos de 12 horas.
+6. Execute o comando de verificação:
+
+```bash
+php artisan loans:check-due-soon
+```
+
+7. Com o worker da fila em execução, verifique o log:
+
+```bash
+storage/logs/laravel.log
+```
+
+---
+
+## Decisões arquiteturais principais
+
+### Actions
+
+A lógica de negócio foi separada em **Actions**, o que ajuda a manter os controllers mais enxutos e focados apenas na camada HTTP. Essa abordagem facilita manutenção, reutilização de código e legibilidade.
+
+### Form Requests
+
+As validações de entrada foram centralizadas em **Form Requests**, deixando os controllers mais limpos e organizando as regras de validação em classes específicas.
+
+### Policies
+
+O controle de autorização foi implementado com **Policies**, garantindo que cada usuário possa executar apenas as ações permitidas dentro do sistema.
+
+### Fila para e-mail
+
+O envio de e-mails foi implementado com **fila**, melhorando a performance da aplicação e evitando que o usuário aguarde o processamento do disparo durante a requisição.
+
+---
+
+## Estrutura geral do projeto
+
+O projeto foi organizado buscando separação de responsabilidades e facilidade de manutenção, com foco em:
+
+- Controllers enxutos
+- Regras de validação desacopladas
+- Lógica de negócio isolada
+- Autorização centralizada
+- Processamento assíncrono para envio de e-mail
+
+---
+
+## Observações
+
+Este projeto foi desenvolvido com foco em:
+
+- boas práticas do Laravel
+- organização do código
+- separação de responsabilidades
+- legibilidade
+- manutenção futura
+- clareza na execução local do ambiente
+
+---
+
+## Comandos úteis
+
+Instalar dependências do backend:
+
+```bash
+composer install
+```
+
+Instalar dependências do frontend:
+
+```bash
+npm install
+```
+
+Gerar chave da aplicação:
+
+```bash
+php artisan key:generate
+```
+
+Executar migrations:
+
+```bash
+php artisan migrate
+```
+
+Executar seeders:
+
+```bash
+php artisan db:seed
+```
+
+Iniciar servidor Laravel:
+
+```bash
+php artisan serve
+```
+
+Rodar frontend:
+
+```bash
+npm run dev
+```
+
+Rodar worker da fila:
+
+```bash
+php artisan queue:work
+```
+
+Rodar scheduler local:
+
+```bash
+php artisan schedule:work
+```
+
+Executar verificação manual de vencimento:
+
+```bash
+php artisan loans:check-due-soon
+```
